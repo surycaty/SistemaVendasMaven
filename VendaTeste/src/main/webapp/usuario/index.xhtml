@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+	<title>Cadastro de Usuário</title>
+</h:head> 
+<h:body>
+	<div id="cabecalho">
+		<p:breadCrumb>
+		    <p:menuitem value="Home" url="#" />
+		    <p:menuitem value="Produto" url="/produto/index.jsf" />
+		    <p:menuitem value="Usuário" url="/usuario/index.jsf" />
+		    <p:menuitem value="Venda" url="/venda/index.jsf" />
+		    <p:menuitem value="Relatório" url="#" />
+		</p:breadCrumb>
+	</div>
+	
+	<div id="contexto">
+		<h1>Cadastro</h1>
+			
+		<p:fieldset>
+			<h:form id="cadastro-usuario">
+		
+				<h:panelGrid id="panel-form" columns="3">
+					<f:facet name="header">
+						<p:messages id="msgs" showDetail="false" showIcon="true"/>
+					</f:facet>
+					
+					<h:inputHidden value="#{usuarioBean.usuario.idUsuario}" />
+				
+					<p:outputLabel value="Login:" for="Login" />
+					<p:inputText id="Login" value="#{usuarioBean.usuario.login}" required="true" requiredMessage="Login obrigatório" />
+					<p:message id="msg-login" for="Login" />
+					
+					<p:outputLabel value="Senha:" for="Senha" />
+					<p:inputText id="Senha" value="#{usuarioBean.usuario.senha}"  required="true" requiredMessage="Senha obrigatória" />
+					<p:message id="msg-senha" for="Senha" />
+					
+					<p:outputLabel value="Nome:" for="Nome" />
+					<p:inputText id="Nome" value="#{usuarioBean.usuario.nome}"  required="true" requiredMessage="Nome obrigatório" />
+					<p:message id="msg-nome" for="Nome" />
+					
+					<p:outputLabel value="Tipo Usuário:" for="TipoUsuario" />
+					<p:selectOneMenu id="TipoUsuario"  value="#{usuarioBean.usuario.tipoUsuario}" required="true" requiredMessage="Tipo Usuário obrigatório">
+						<f:selectItem itemLabel="Selecione..." itemValue="" />
+			            <f:selectItem itemLabel="Administrador" itemValue="A" />
+			            <f:selectItem itemLabel="Vendedor" itemValue="V" />
+					</p:selectOneMenu>
+					<p:message id="msg-tipo-usuario" for="TipoUsuario" />
+					
+					<span></span>
+					<span></span>
+					<p:commandButton id="btnSalvar" action="#{usuarioBean.salvar()}" value="Salvar" update="cadastro-usuario, msgs, :form-lista:dataTableListaUsuario" />
+				</h:panelGrid>
+			</h:form>
+
+			<h:form id="form-lista">
+				<p:dataTable id="dataTableListaUsuario" 
+									value="#{usuarioBean.listarTodos()}"
+									var="usuario"
+									rows="10"
+					                paginator="true"
+					                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					                rowsPerPageTemplate="2,4,6"
+					                emptyMessage="Nenhum usuário encontrado!">
+			                
+							<p:column headerText="Código">#{usuario.idUsuario}</p:column>
+							
+							<p:column headerText="Login">#{usuario.login}</p:column>
+							
+							<p:column headerText="Nome">#{usuario.nome}</p:column>
+							
+							<p:column headerText="Cadastro">
+								<h:outputText value="#{usuario.dataCadastro}" >
+									<f:convertDateTime dateStyle="medium" type="date" />
+								</h:outputText>
+							</p:column>
+												
+							<p:column headerText="Ação">
+								<p:commandButton id="btnAtualizar" 
+												action="#{usuarioBean.atualizar(usuario)}" 
+												value=""
+												update=":cadastro-usuario"
+												 icon="ui-icon-pencil" style="width: 40px; height: 20px;" />
+												 
+								<p:commandButton  id="btnExcluir" value="" 
+												actionListener="#{usuarioBean.excluir(usuario)}" 
+												update=":form-lista, :cadastro-usuario:msgs" icon="ui-icon-trash" style="width: 40px; height: 20px;">
+							        <p:confirm header="Confirmação" message="Deseja realmente excluir o usuário #{usuario.nome}?" icon="ui-icon-alert" />
+							    </p:commandButton>
+							 
+							    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+							    </p:confirmDialog>
+							</p:column>
+					</p:dataTable>
+				</h:form>
+			</p:fieldset>
+		</div>
+	
+	<div id="rodape">
+		<span>@Surycaty 2016</span>
+	</div>
+</h:body>  
+</html>
+

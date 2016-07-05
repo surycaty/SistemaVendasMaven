@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+	<title>Vendas</title>
+</h:head> 
+<h:body>
+	<div id="cabecalho">
+		<p:breadCrumb>
+		    <p:menuitem value="Home" url="#" />
+		    <p:menuitem value="Produto" url="/produto/index.jsf" />
+		    <p:menuitem value="Usuário" url="/usuario/index.jsf" />
+		    <p:menuitem value="Venda" url="/venda/index.jsf" />
+		    <p:menuitem value="Relatório" url="#" />
+		</p:breadCrumb>
+	</div>
+	
+	<div id="contexto"> 
+		<h1>Venda</h1>
+		
+		<h:form id="formBusca">
+			<p:panelGrid id="panelGrid" >
+				<p:row>
+					<p:column>
+						<h:panelGrid columns="4">
+							<f:facet name="header">
+								<p:messages id="msgs" />
+							</f:facet>
+							
+							<p:message for="idProduto" />
+							<p:outputLabel for="idProduto">Produto:</p:outputLabel>
+							<p:autoComplete id="idProduto"
+											completeMethod="#{produtoBean.listarPorNome}" 
+											value="#{vendaBean.produtoAdicionado}" var="p"
+											itemLabel="#{p.nome}" itemValue="#{p}" converter="ConversorProduto"  />
+							 
+							<p:commandButton update="panelGrid" action="#{vendaBean.adicionaProduto}" value="Adicionar"></p:commandButton>
+						</h:panelGrid>
+					</p:column>
+					<p:column rowspan="2">
+					    <p:dataTable id="displayTable" value="#{vendaBean.listaProdutoVenda}" var="prod" emptyMessage="Nenhum produto foi adicionado à venda!">
+					    	<f:facet name="header">
+					            Produtos
+					        </f:facet>
+					        <p:column headerText="Qtde">
+						        <h:outputText value="#{prod.quantidade}" />
+						    </p:column>
+						    
+						    <p:column headerText="Nome">
+						        <h:outputText value="#{prod.produto.nome}" />
+						    </p:column>
+						    
+						    <p:column headerText="Valor Un.">
+						        <h:outputText value="#{prod.valorUnitario}" >
+						        	<f:convertNumber currencyCode="BRL" type="currency" />
+						        </h:outputText>
+						    </p:column>
+						    
+						    <p:column headerText="Sub. Total">
+						        <h:outputText value="#{prod.valorPorProduto}" >
+						        	<f:convertNumber currencyCode="BRL" type="currency" />
+						        </h:outputText>
+						    </p:column>
+					    </p:dataTable>
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<h:panelGrid columns="2">
+							<p:outputLabel for="formaPagamento">Forma de Pagamento:</p:outputLabel>
+							<p:selectOneMenu id="formaPagamento" value="#{vendaBean.venda.formaPagamento}" style="width:200px">
+					            <f:selectItem itemLabel="Selecione..." itemValue="" />
+					            <f:selectItem itemLabel="Dinheiro" itemValue="1" />
+					            <f:selectItem itemLabel="Crédito" itemValue="2" />
+					            <f:selectItem itemLabel="Débito" itemValue="3" />
+					        </p:selectOneMenu>
+					        
+					        <p:outputLabel for="valor">Total:</p:outputLabel>
+							<p:inputText id="valor" value="#{vendaBean.venda.valor}" readonly="true" size="20">
+								<f:convertNumber currencySymbol="R$" pattern="#,##0.00"></f:convertNumber>
+							</p:inputText>
+				
+							<span></span>
+							<p:commandButton update="panelGrid" action="#{vendaBean.salvar}" value="Salvar" style="float: right;"></p:commandButton>
+						</h:panelGrid>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</h:form>
+	</div>
+	
+	<div id="rodape">
+		<span>@Surycaty 2016</span>
+	</div>
+</h:body>  
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head>
+	<title>Cadastro de Produtos</title>
+</h:head> 
+<h:body>
+	<div id="cabecalho">
+		<p:breadCrumb>
+		    <p:menuitem value="Home" url="#" />
+		    <p:menuitem value="Produto" url="/produto/index.jsf" />
+		    <p:menuitem value="Usuário" url="/usuario/index.jsf" />
+		    <p:menuitem value="Venda" url="/venda/index.jsf" />
+		    <p:menuitem value="Relatório" url="#" />
+		</p:breadCrumb>
+	</div>
+	
+	<div id="contexto">
+		<h2>Produto</h2>
+		<p:fieldset>
+			
+			<h:form id="cadastro-produto">
+				<p:messages  autoUpdate="true" closable="false" />
+				
+				<h:panelGrid id="panelProduto" columns="2">
+					<span></span>
+					<h:inputHidden value="#{produtoBean.produto.idProduto}" />
+				
+					<p:outputLabel for="Nome" >Nome:</p:outputLabel>
+					<p:inputText id="Nome" value="#{produtoBean.produto.nome}" required="true" requiredMessage="Nome Obrigatório" />
+					
+					<p:outputLabel for="Unidade" >Unidade:</p:outputLabel>
+					<p:inputText id="Unidade" value="#{produtoBean.produto.unidade}" />
+					
+					<p:outputLabel for="Valor" >Valor:</p:outputLabel>
+					<p:inputText id="Valor" value="#{produtoBean.produto.valor}" required="true" requiredMessage="Valor Obrigatório">
+						<f:convertNumber currencyCode="BRL"  type="currency" pattern="#,##0.00" />
+					</p:inputText>
+					
+					<span></span>
+					<p:column colspan="2">
+						<p:commandButton action="#{produtoBean.salvar}" value="Salvar" update="cadastro-produto, :form-lista:listaProduto" />
+						<p:commandButton action="#{produtoBean.limparDados}" value="Limpar Dados" update="cadastro-produto:panelProduto" />
+					</p:column>
+				</h:panelGrid>
+			</h:form>
+			
+			<h:form id="form-lista">
+				<p:dataTable id="listaProduto" 
+								value="#{produtoBean.listarTodos()}"
+								var="produto"
+								rows="10"
+				                paginator="true"
+				                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				                rowsPerPageTemplate="2,4,6"
+				                emptyMessage="Nenhum produto cadastrado!">
+		                
+						<p:column headerText="Código">#{produto.idProduto}</p:column>
+											
+						<p:column headerText="Nome">#{produto.nome}</p:column>
+						
+						<p:column headerText="Unidade">#{produto.unidade}</p:column>
+						
+						<p:column headerText="Valor">
+							<h:outputText value="#{produto.valor}" >
+								<f:convertNumber currencySymbol="R$" currencyCode="BRL" type="currency" />
+							</h:outputText>
+						</p:column>
+											
+						<p:column headerText="Ação">
+							<p:commandButton id="btnAtualizar" 
+											action="#{produtoBean.atualizar(produto)}" 
+											value=""
+											update=":cadastro-produto:panelProduto"
+											 icon="ui-icon-pencil" style="width: 40px; height: 20px;" />
+						
+						</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:fieldset>
+	</div>
+	
+	<div id="rodape">
+		<span>@Surycaty 2016</span>
+	</div>
+</h:body> 
+</html>
